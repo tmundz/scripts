@@ -1,0 +1,9 @@
+Responding Officer #1  Badge No, Responding Officer #1  Name, Responding Officer #2 Badge No,
+Responding Officer #2  Name, Reporting Officer Badge No, Assisting Officer Badge No, Reviewing Officer Badge No,
+Element Number Assigned, Offense Status, X Coordinate, Y Cordinate, Zip Code, City, State, HRA, Offense Status, ArLRA,
+RMS Code, Criminal Justice Information Service Code, Penal Code, Gang Related Offense, Weapon Used, Year of Incident,
+Service Number ID, Watch, Call (911) Problem, Type of Property, Incident Address, Apartment Number, Reporting Area,
+Beat, Division, Sector, Council District, Victim Ethnicity, ArDOW, Age, ArLDistrict, ArLSector, Location1, Transport1,
+Transport2, ArAction, HApt, ArresteeName, AliasName, NickName, Element Number Assigned, ArCurrLoc, ClothingWorn, UpZDate,
+Service Number ID, Date2 of Occurence, Date1 of Occurence, Person Involvement Type, CFS Number, Community, Target Area Action Grids
+
