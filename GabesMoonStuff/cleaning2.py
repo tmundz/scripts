@@ -14,13 +14,15 @@ print(f"\nTotal number of rows in the dataset: {total_rows_before}\n\n")
 # Rename the column 'Responding Officer #1 Badge No' to 'Res Offc1 Badge No'
 arrests_integrated_df = arrests_integrated_df.rename(columns={' Responding Officer #1  Badge No': 'Res Offc1 Badge No'})
 
-# List of columns to keep
+# List of columns to keep.
+# recent drops:
+# ('IncidentNum', 'ArrestNumber', 'IncidentNum', 'ArrestNumber', 'ArArrestDate', 'Height', 'ArLBeat', )
 columns_to_keep = [
-    'IncidentNum', 'ArrestNumber', 'ArArrestDate', 'ArArrestTime',
-    'ArLZip', 'ArLBeat', 'ArPremises', 'ArWeapon', 'AgeAtArrestTime',
+    'ArArrestTime',
+    'ArLZip', 'ArPremises', 'ArWeapon', 'AgeAtArrestTime',
     'HZIP', 'HBeat', 'Weight', 'Hair', 'Eyes', 'Race', 'Ethnic', 'Sex',
     'DrugRelated', 'DrugType', 'NIBRS Crime Against',
-    'NIBRS Code', 'FullMoon', 'Height' ]
+    'NIBRS Code', 'FullMoon', 'Sector']
 
 # Keep only the specified columns
 arrests_integrated_df = arrests_integrated_df[columns_to_keep]
@@ -39,15 +41,26 @@ arrests_integrated_df['Weight'] = pd.to_numeric(arrests_integrated_df['Weight'],
 # Remove rows where 'Weight' is less than 50
 arrests_integrated_df = arrests_integrated_df[arrests_integrated_df['Weight'] >= 50]
 #------------------------------------------------------------------------------------------------------------------
-# Replace infinite values with NaN in the 'Weight' column
+# Replace infinite values with NaN in the 'Sector' column
+arrests_integrated_df['Sector'].replace([np.inf, -np.inf], np.nan, inplace=True)
+
+# Drop rows with NaN values in the 'Sector' column
+arrests_integrated_df = arrests_integrated_df.dropna(subset=['Sector'])
+
+arrests_integrated_df = arrests_integrated_df[pd.to_numeric(arrests_integrated_df['Sector'], errors='coerce').notnull()]
+
+# Convert the 'Sector' column to integers
+arrests_integrated_df['Sector'] = pd.to_numeric(arrests_integrated_df['Sector'], errors='coerce').astype(int)
+#------------------------------------------------------------------------------------------------------------------
+# Replace infinite values with NaN in the 'HZIP' column
 arrests_integrated_df['HZIP'].replace([np.inf, -np.inf], np.nan, inplace=True)
 
-# Drop rows with NaN values in the 'Weight' column
+# Drop rows with NaN values in the 'HZIP' column
 arrests_integrated_df = arrests_integrated_df.dropna(subset=['HZIP'])
 
 arrests_integrated_df = arrests_integrated_df[pd.to_numeric(arrests_integrated_df['HZIP'], errors='coerce').notnull()]
 
-# Convert the 'Weight' column to integers
+# Convert the 'HZIP' column to integers
 arrests_integrated_df['HZIP'] = pd.to_numeric(arrests_integrated_df['HZIP'], errors='coerce').astype(int)
 #------------------------------------------------------------------------------------------------------------------
 # FIX ISSUE WITH DROPPING TO MUCH
@@ -104,7 +117,7 @@ arrests_integrated_df['ArLZip'] = pd.to_numeric(arrests_integrated_df['ArLZip'],
 # arrests_integrated_df['ArLBeat'] = arrests_integrated_df['ArLBeat'].astype(str).str.rstrip('.')
 #
 # # Convert the 'Weight' column to integers
-arrests_integrated_df['ArLBeat'] = pd.to_numeric(arrests_integrated_df['ArLBeat'], errors='coerce').astype('Int64')
+# arrests_integrated_df['ArLBeat'] = pd.to_numeric(arrests_integrated_df['ArLBeat'], errors='coerce').astype('Int64')
 #----------------------------------------------------------------------------------------------------------------------
 # Mapping of weapon categories
 weapon_mapping = {
@@ -186,3 +199,7 @@ non_full_moon_heights = arrests_integrated_df[arrests_integrated_df['FullMoon'] 
 t_stat, p_value = ttest_ind(full_moon_heights, non_full_moon_heights, nan_policy='omit')
 print(f"\n\nT-statistic: {t_stat}, p-value: {p_value}\n")
 #-----------------------------------------------------------------------------------------------------------------------
+arrests_integrated_df.to_csv('arrests_final.csv', index=False)
+
+total_rows_after = arrests_integrated_df.shape[0]
+print(f"\nTotal number of rows in the dataset: {total_rows_after}\n\n")
